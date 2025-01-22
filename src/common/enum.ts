@@ -1,0 +1,14 @@
+export enum Category {
+    STORE = 'STORE',
+    DRINKS = 'DRINKS',
+    BREAKFAST_AND_SNACK = 'BREAKFAST_AND_SNACK',
+    FRESH_PRODUCTS = 'FRESH_PRODUCTS',
+    PERFUMERY = 'PERFUMERY',
+    CLEANING = 'CLEANING'
+};
+
+export enum Gender {
+    MALE = 'MALE',
+    FEMALE = 'FEMALE',
+    NONBINARY = 'NONBINARY'
+}

@@ -1,0 +1,11 @@
+node_modules
+src/build
+src/build/**
+src/lambdas/**/*.js
+src/common/**/*.js
+src/common/*.js
+.serverless
+dist
+.vscode
+package-lock.json
+.build

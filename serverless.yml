@@ -1,0 +1,249 @@
+service: deyappa-back-sls
+frameworkVersion: "3"
+
+package:
+  exclude: 
+    - "./**"
+  individually: true
+plugins:
+  - serverless-offline
+custom:
+  notificationsTableName: "notifications-table-${sls:stage}"
+  headersTableName: "headers-table-${sls:stage}"
+  headersTableNameVertex : "headers-table-vertex-${sls:stage}"
+  billsTableName: "bills-table-${sls:stage}"
+  billsTableVertexName: "bills-table-vertex-${sls:stage}"
+  mainTableName: "main-table-${sls:stage}"
+  commonTableName: "common-table-${sls:stage}"
+  configTableName: "config-table-${sls:stage}"
+  referencesTableName: "references-table-${sls:stage}"
+  itemsTableName: "items-table-${sls:stage}"
+  s3Products: "s3-deyappa-products-${sls:stage}"
+  sqsBillsVertex: "sqs-bills-vertex-${sls:stage}"
+  dlqBillsVertex: "dlq-bills-vertex-${sls:stage}"
+  sqsCompressImageVideoFile: "sqs-compress-image-video-file-${sls:stage}"
+  dlqCompressImageVideoFile: "dlq-compress-image-video-file-${sls:stage}"
+  sqsBillsTextract: "sqs-bills-textract-${sls:stage}"
+  dlqBillsTextract: "dlq-bills-textract-${sls:stage}"
+  sqsBillAnalysis: "sqs-bill-analysis-${sls:stage}"
+  dlqBillAnalysis: "dlq-bill-analysis-${sls:stage}"
+  sqsBillTextractPreProcessing: "sqs-bill-textract-pre-processing-${sls:stage}"
+  dlqBillTextractPreProcessing: "dlq-bill-textract-pre-processing-${sls:stage}"
+  sqsProductIdentify: "sqs-product-identify-${sls:stage}"
+  dlqProductIdentify: "dlq-product-identify-${sls:stage}"
+  sqsPromotionsIdentify: "sqs-promotions-identify-${sls:stage}"
+  dlqPromotionsIdentify: "dlq-promotions-identify-${sls:stage}"
+  sqsApplyPromotionAmount: "sqs-apply-promotion-amount-${sls:stage}"
+  dlqApplyPromotionAmount: "dlq-apply-promotion-amount-${sls:stage}"
+  sqsNotify: "sqs-notify-${sls:stage}"
+  dlqSqsNotify: "dlq-notify-${sls:stage}"
+  sqsSimpleHeaderOCR: "sqs-simple-header-ocr-${sls:stage}"
+  dlqSimpleHeaderOCR: "dlq-simple-header-ocr-${sls:stage}"
+  sqsIntelligentHeaderOCR: "sqs-intelligent-header-ocr-${sls:stage}"
+  dlqIntelligentHeaderOCR: "dlq-intelligent-header-ocr-${sls:stage}"
+  sqsSeekHeaderRelationships: "sqs-seek-header-relationships-${sls:stage}"
+  dlqSeekHeaderRelationships: "dlq-seek-header-relationships-${sls:stage}"
+  sqsCheckHeaderDictionary: "sqs-check-header-dictionary-${sls:stage}"
+  dlqCheckHeaderDictionary: "dlq-check-header-dictionary-${sls:stage}"
+  sqsAddHeaderDictionary: "sqs-add-header-dictionary-${sls:stage}"
+  dlqAddHeaderDictionary: "dlq-add-header-dictionary-${sls:stage}"
+  S3BucketArn:
+    Fn::Join:
+      - ""
+      - - "arn:aws:s3:::"
+        - ${self:custom.s3Products}
+  S3BucketArn1:
+    Fn::Join:
+      - ""
+      - - "arn:aws:s3:::"
+        - ${self:custom.s3Products}
+        - "/*"
+  s3Bills: "s3-deyappa-bills-${sls:stage}"
+  S3BucketBillsArn:
+    Fn::Join:
+      - ""
+      - - "arn:aws:s3:::"
+        - ${self:custom.s3Bills}
+  S3BucketBillsArn1:
+    Fn::Join:
+      - ""
+      - - "arn:aws:s3:::"
+        - ${self:custom.s3Bills}
+        - "/*"
+  temporaryBucketS3: "temporary-bucket-s3-${sls:stage}"
+  temporaryBucketS3Arn:
+    Fn::Join:
+      - ""
+      - - "arn:aws:s3:::"
+        - ${self:custom.temporaryBucketS3}
+  temporaryBucketS3Arn1:
+    Fn::Join:
+      - ""
+      - - "arn:aws:s3:::"
+        - ${self:custom.temporaryBucketS3}
+        - "/*"
+  billsTableEventBus: "bills-table-deyappa-event-bus-${sls:stage}"
+  billsTableVertexEventBus: "bills-table-vertex-event-bus-${sls:stage}"
+  billsVertexRule: "bills-vertex-rule-${sls:stage}"
+  compressBillsRule: "compress-bills-vertex-rule-${sls:stage}"
+  billsTextractRule: "bills-textract-rule-${sls:stage}"
+  billAnalysisRule: "bills-analysis-rule-${sls:stage}"
+  billTextractPreProcessingRule: "bill-textract-pre-processing-rule-${sls:stage}"
+  productIdentifyRule: "product-identify-rule-${sls:stage}"
+  promotionsIdentifyRule: "promotions-identify-rule-${sls:stage}"
+  applyPromotionAmountRule: "apply-promotion-amount-rule-${sls:stage}"
+  notifyRule: "notify-rule-${sls:stage}"
+  simpleHeaderOCRRule: "simple-header-ocr-rule-${sls:stage}"
+  intelligentHeaderOCRRule: "intelligent-header-ocr-rule-${sls:stage}"
+  seekHeaderRelationshipsRule: "seek-header-relationships-rule-${sls:stage}"
+  checkHeaderDictionaryRule: "check-header-dictionary-rule-${sls:stage}"
+  addHeaderDictionaryRule: "add-header-dictionary-rule-${sls:stage}"
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-2'}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:BatchGetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:BatchWriteItem
+          Resource:
+            - Fn::GetAtt: [MainTable, Arn]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": ["MainTable", "Arn"] }
+                  - "index/*"
+            - Fn::GetAtt: [CommonTable, Arn]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": ["CommonTable", "Arn"] }
+                  - "index/*"
+            - Fn::GetAtt: [ConfigTable, Arn]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": ["ConfigTable", "Arn"] }
+                  - "index/*"
+            - Fn::GetAtt: [BillsTable, Arn]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": ["BillsTable", "Arn"] }
+                  - "index/*"
+            - Fn::GetAtt: [ReferencesTable, Arn]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": ["ReferencesTable", "Arn"] }
+                  - "index/*"
+            - Fn::GetAtt: [ItemsTable, Arn]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": ["ItemsTable", "Arn"] }
+                  - "index/*"
+            - Fn::GetAtt: [HeadersTable, Arn]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": ["HeadersTable", "Arn"] }
+                  - "index/*"
+            - Fn::GetAtt: [BillsTableVertex, Arn]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": ["BillsTableVertex", "Arn"] }
+                  - "index/*"
+            - Fn::GetAtt: [HeadersTableVertex, Arn]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": ["HeadersTableVertex", "Arn"] }
+                  - "index/*"
+            - Fn::GetAtt: [NotificationsTable, Arn]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": ["NotificationsTable", "Arn"] }
+                  - "index/*"
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+            - s3:PutObject
+            - s3:PutObjectAcl
+            - s3:PutBucketAcl
+            - s3:PutObjectCommand
+            - s3:GetObjectCommand
+          Resource:
+            - ${self:custom.S3BucketArn}
+            - ${self:custom.S3BucketArn1}
+            - ${self:custom.S3BucketBillsArn}
+            - ${self:custom.S3BucketBillsArn1}
+            - ${self:custom.temporaryBucketS3Arn}
+            - ${self:custom.temporaryBucketS3Arn1}
+        - Effect: Allow
+          Action:
+            - s3:ListObjects
+            - s3:ListBucket
+          Resource:
+            - ${self:custom.S3BucketArn}
+            - ${self:custom.S3BucketArn1}
+            - ${self:custom.S3BucketBillsArn}
+            - ${self:custom.S3BucketBillsArn1}
+            - ${self:custom.temporaryBucketS3Arn}
+            - ${self:custom.temporaryBucketS3Arn1}
+        - Effect: Allow
+          Action:
+            - cognito-idp:*
+            - kms:Decrypt
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - events:PutEvents
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - textract:AnalyzeExpense
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - ses:SendTemplatedEmail
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - mediaconvert:CreateJob
+            - mediaconvert:GetJob
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - iam:PassRole
+          Resource: arn:aws:iam::233101904261:role/deyappa-back-sls*
+  environment:
+    ACCOUNT_ID: { "Ref": "AWS::AccountId" }
+    BILLS_TABLE: ${self:custom.billsTableName}
+    BILLS_TABLE_VERTEX: ${self:custom.billsTableVertexName}
+    MAIN_TABLE: ${self:custom.mainTableName}
+    HEADERS_TABLE: ${self:custom.headersTableName}
+    HEADERS_TABLE_VERTEX: ${self:custom.headersTableNameVertex}
+    NOTIFICATIONS_TABLE: ${self:custom.notificationsTableName}
+    COMMON_TABLE: ${self:custom.commonTableName}
+    CONFIG_TABLE: ${self:custom.configTableName}
+    REFERENCES_TABLE: ${self:custom.referencesTableName}
+    ITEMS_TABLE: ${self:custom.itemsTableName}
+    BUCKET_PRODUCTS: ${self:custom.s3Products}
+    BUCKET_BILLS: ${self:custom.s3Bills}
+    TEMPORARY_BUCKET_S3: ${self:custom.temporaryBucketS3}
+    EVENT_BUS_BILL_TABLE: ${self:custom.billsTableEventBus}
+    EVENT_BUS_VERTEX_BILL_TABLE: ${self:custom.billsTableVertexEventBus}
+    EMAIL: ${file(${self:provider.stage}/env.yml):EMAIL}
+    PINO_LOG_LEVEL: ${file(${self:provider.stage}/env.yml):PINO_LOG_LEVEL}
+    REGION_COGNITO: ${file(${self:provider.stage}/env.yml):REGION_COGNITO}
+    REGION: ${opt:region, 'us-east-2'}
+    ENV: ${opt:stage, 'dev'}
+  logs:
+    restApi: true
+
+functions: ${file(${self:provider.stage}/functions.yml)}
+
+resources: ${file(${self:provider.stage}/resources.yml):resources}

@@ -1,0 +1,298 @@
+service: common-sls
+frameworkVersion: '3'
+
+custom:
+  templateOk: 'template-ok'
+  templateOkWithoutName: 'template-ok-without-name'
+  templateDuplicate: 'template-duplicate'
+  templateDuplicateWithoutName: 'template-duplicate-without-name'
+  templateScanUnsuccessful: 'template-scan-unsuccessful'
+  templateScanUnsuccessfulWithoutName: 'template-scan-unsuccessful-without-name'
+  templateAfter24Hours: 'template-after-24-hours'
+  templateAfter24HoursWithoutName: 'template-after-24-hours-without-name' 
+  templateBillLimitDayReached: 'template-bill-limit-day-reached'
+  templateBillLimitDayReachedWithoutName: 'template-bill-limit-day-reached-without-name'
+  templateBillLimitWeekReached: 'template-bill-limit-week-reached'
+  templateBillLimitWeekReachedWithoutName: 'template-bill-limit-week-reached-without-name'
+  templateBillLimitMonthReached: 'template-bill-limit-month-reached'
+  templateBillLimitMonthReachedWithoutName: 'template-bill-limit-month-reached-without-name'
+  templateBillWithoutIdentifiedProducts: 'template-bill-without-identified-products'
+  templateBillWithoutIdentifiedProductsWithoutName: 'template-bill-without-identified-products-without-name'
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-2'}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - ses:SendTemplatedEmail
+          Resource: '*'
+resources:
+  Resources:
+    TemplateOk:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateOk}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola {{name}}!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que el ticket escaneado fue procesado con &eacute;xito, por lo cual obtuviste un total de {{sumcashbackhistory}} chances para el sorteo.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'><br></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Estas chances acumuladas ya incluyen 500 chances EXTRA, s&oacute;lo por haber escaneado el ticket!!!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta comun&iacute;cate con nosotros al <a href='mailto:hola@deyappa.com'>hola@deyappa.com</a></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: 1bf00615-35fd-484c-8489-c451c7087dc8 --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    TemplateOkWithoutName:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateOkWithoutName}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que el ticket escaneado fue procesado con &eacute;xito, por lo cual obtuviste un total de {{sumcashbackhistory}} chances para el sorteo.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'><br></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Estas chances acumuladas ya incluyen 500 chances EXTRA, s&oacute;lo por haber escaneado el ticket!!!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta comun&iacute;cate con nosotros al <a href='mailto:hola@deyappa.com'>hola@deyappa.com</a></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: 1bf00615-35fd-484c-8489-c451c7087dc8 --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    TemplateDuplicate:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateDuplicate}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola {{name}}!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado y lamentablemente no acumulaste chances con &eacute;l ya que el mismo fue escaneado y registrado anteriormente por vos u otro usuario.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ten&eacute; en cuenta que cada ticket puede ser procesado una sola vez, es que decir que, si fue escaneado por un usuario y el mismo es procesado, dicho ticket queda sin efecto para futuros escaneos.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: 9ae81b6b-ffd3-4ccb-b474-20448bc4ee92 --><br></p>
+            <p><!-- notionvc: b5a87146-0442-46e5-b31e-67f31861cfa1 --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    TemplateDuplicateWithoutName:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateDuplicateWithoutName}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado y lamentablemente no acumulaste chances con &eacute;l ya que el mismo fue escaneado y registrado anteriormente por vos u otro usuario.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ten&eacute; en cuenta que cada ticket puede ser procesado una sola vez, es que decir que, si fue escaneado por un usuario y el mismo es procesado, dicho ticket queda sin efecto para futuros escaneos.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: 9ae81b6b-ffd3-4ccb-b474-20448bc4ee92 --><br></p>
+            <p><!-- notionvc: b5a87146-0442-46e5-b31e-67f31861cfa1 --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    TemplateScanUnsuccessful:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateScanUnsuccessful}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola {{name}}! 👋🏼</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'><span style='font-size:15px;font-family:Calibri,sans-serif;'>❌😔 Hemos revisado el ticket que escaneaste, y lamentablemente no acumulaste chances con él. Esto puede deberse a varios factores, como una imagen borrosa, falta de iluminación o que algunos datos importantes del ticket no sean legibles, como la información completa de la <strong>cabecera</strong>, el detalle de <strong>productos</strong> o el <strong>monto total</strong>.</span></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'><span style='font-size:15px;font-family:Calibri,sans-serif;'>🤳🏽 Te sugerimos asegurarte de que el ticket esté completo y que lo escanees en un ambiente bien iluminado para que la cámara enfoque claramente. Si estás subiendo un video, grabalo de manera lenta para mejorar el escaneo.</span></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'><span style='font-size:15px;font-family:Calibri,sans-serif;'>📧 Si crees que esto es un error o necesitas asistencia, no dudes en escribirnos a hola@deyappa.com adjuntando una foto clara del ticket. Revisaremos tu caso y te responderemos a la brevedad.</span></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'><span style='font-size:15px;font-family:Calibri,sans-serif;'>🙌🏻 Agradecemos tu comprensión y esperamos que muy pronto seas el próximo en celebrar un premio con Deyappa. ¡Mucha suerte! 😉</span></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Saludos,</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>El equipo de Deyappa</p>
+            <p><!-- notionvc: 0add12d9-2f75-4e8f-a496-c53df1dc4d42 --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    TemplateScanUnsuccessfulWithoutName:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateScanUnsuccessfulWithoutName}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola! 👋🏼</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'><span style='font-size:15px;font-family:Calibri,sans-serif;'>❌😔 Hemos revisado el ticket que escaneaste, y lamentablemente no acumulaste chances con él. Esto puede deberse a varios factores, como una imagen borrosa, falta de iluminación o que algunos datos importantes del ticket no sean legibles, como la información completa de la <strong>cabecera</strong>, el detalle de <strong>productos</strong> o el <strong>monto total</strong>.</span></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'><span style='font-size:15px;font-family:Calibri,sans-serif;'>🤳🏽 Te sugerimos asegurarte de que el ticket esté completo y que lo escanees en un ambiente bien iluminado para que la cámara enfoque claramente. Si estás subiendo un video, grabalo de manera lenta para mejorar el escaneo.</span></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'><span style='font-size:15px;font-family:Calibri,sans-serif;'>📧 Si crees que esto es un error o necesitas asistencia, no dudes en escribirnos a hola@deyappa.com adjuntando una foto clara del ticket. Revisaremos tu caso y te responderemos a la brevedad.</span></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'><span style='font-size:15px;font-family:Calibri,sans-serif;'>🙌🏻 Agradecemos tu comprensión y esperamos que muy pronto seas el próximo en celebrar un premio con Deyappa. ¡Mucha suerte! 😉</span></p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Saludos,</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>El equipo de Deyappa</p>
+            <p><!-- notionvc: 0add12d9-2f75-4e8f-a496-c53df1dc4d42 --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    TemplateAfter24Hours:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateAfter24Hours}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola @nombre!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado y lamentablemente no acumulaste chances con &eacute;l ya que el mismo fue escaneado despu&eacute;s de las 24 horas de realizada la compra.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ten&eacute; en cuenta que el ticket debe ser escaneado dentro de las 24 horas de realizada la compra, si no el ticket queda sin efecto.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: 1ac2067b-ed96-42f2-a6a4-a31a1ed0207e --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    templateAfter24HoursWithoutName:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateAfter24HoursWithoutName}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola @nombre!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado y lamentablemente no acumulaste chances con &eacute;l ya que el mismo fue escaneado despu&eacute;s de las 24 horas de realizada la compra.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ten&eacute; en cuenta que el ticket debe ser escaneado dentro de las 24 horas de realizada la compra, si no el ticket queda sin efecto.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: 1ac2067b-ed96-42f2-a6a4-a31a1ed0207e --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    templateBillLimitDayReached:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateBillLimitDayReached}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola {{name}}!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado y lamentablemente no acumulaste chances con &eacute;l ya que superaste la cantidad de tickets escaneados y procesados por usuario y por d&iacute;a, pertenecientes al mismo comercio.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ten&eacute; en cuenta que la cantidad de tickets que pueden ser escaneados y procesados en un d&iacute;a por usuario y por comercio son 3 (tres).</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: bf3a627e-6ea5-442f-a850-c7f7475ddc89 --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    templateBillLimitDayReachedWithoutName:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateBillLimitDayReachedWithoutName}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado y lamentablemente no acumulaste chances con &eacute;l ya que superaste la cantidad de tickets escaneados y procesados por usuario y por d&iacute;a, pertenecientes al mismo comercio.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ten&eacute; en cuenta que la cantidad de tickets que pueden ser escaneados y procesados en un d&iacute;a por usuario y por comercio son 3 (tres).</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: bf3a627e-6ea5-442f-a850-c7f7475ddc89 --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    templateBillLimitWeekReached:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateBillLimitWeekReached}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola {{name}}!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado y lamentablemente no acumulaste chances con &eacute;l ya que superaste la cantidad de tickets escaneados y procesados por usuario y por semana, pertenecientes al mismo comercio.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ten&eacute; en cuenta que la cantidad de tickets que pueden ser escaneados y procesados en una semana por usuario y por comercio son 15 (quince).</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: 7f6020f3-7873-40fe-b530-56cab904a389 --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    templateBillLimitWeekReachedWithoutName:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateBillLimitWeekReachedWithoutName}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado y lamentablemente no acumulaste chances con &eacute;l ya que superaste la cantidad de tickets escaneados y procesados por usuario y por semana, pertenecientes al mismo comercio.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ten&eacute; en cuenta que la cantidad de tickets que pueden ser escaneados y procesados en una semana por usuario y por comercio son 15 (quince).</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: 7f6020f3-7873-40fe-b530-56cab904a389 --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    templateBillLimitMonthReached:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateBillLimitMonthReached}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola {{name}}</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado y lamentablemente no acumulaste chances con &eacute;l ya que superaste la cantidad de tickets escaneados y procesados por usuario y por mes, pertenecientes al mismo comercio.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ten&eacute; en cuenta que la cantidad de tickets que pueden ser escaneados y procesados en un mes por usuario y por comercio son 40 (cuarenta).</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: b75d0b1d-fbdf-49f8-90be-0298ec6888af --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    templateBillLimitMonthReachedWithoutName:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateBillLimitMonthReachedWithoutName}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado y lamentablemente no acumulaste chances con &eacute;l ya que superaste la cantidad de tickets escaneados y procesados por usuario y por mes, pertenecientes al mismo comercio.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ten&eacute; en cuenta que la cantidad de tickets que pueden ser escaneados y procesados en un mes por usuario y por comercio son 40 (cuarenta).</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: b75d0b1d-fbdf-49f8-90be-0298ec6888af --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    templateBillWithoutIdentifiedProducts:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateBillWithoutIdentifiedProducts}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola {{name}}!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado, pero no identificamos ning&uacute;n producto en promoci&oacute;n.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Sin embargo, sumaste 500 chances por haber escaneado el ticket!!! Acordate que todos los tickets validos otorgan 500 chances para&nbsp;los&nbsp;sorteos</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: 5e6ff26e-d783-424d-8659-68866c4db09f --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
+    templateBillWithoutIdentifiedProductsWithoutName:
+      Type: AWS::SES::Template
+      Properties:
+        Template: 
+          TemplateName: ${self:custom.templateBillWithoutIdentifiedProductsWithoutName}
+          HtmlPart: "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Hola!</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Te contamos que hemos analizado el ticket escaneado, pero no identificamos ning&uacute;n producto en promoci&oacute;n.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Sin embargo, sumaste 500 chances por haber escaneado el ticket!!! Acordate que todos los tickets validos otorgan 500 chances para&nbsp;los&nbsp;sorteos</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>Ante cualquier duda o consulta, o si te parece que esto es un error, comun&iacute;cate con nosotros al hola@deyappa.com; adjuntando una foto del ticket. Lo vamos a revisar y darte una respuesta a la brevedad posible.</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&nbsp;</p>
+            <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:11.0pt;font-family:Calibri,sans-serif;line-height:normal;border:none;padding:0cm;'>&iexcl;Segu&iacute; ahorrando con deyappa!</p>
+            <p><!-- notionvc: 5e6ff26e-d783-424d-8659-68866c4db09f --><br></p>"
+          SubjectPart: "deyappa - procesamiento de tu ticket"
