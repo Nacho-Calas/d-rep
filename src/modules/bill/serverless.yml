@@ -1,0 +1,34 @@
+service: bill
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-2'}
+
+  iam: 
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:BatchGetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:BatchWriteItem
+          # Resource:
+
+  enviroment:
+    ACCOUNT_ID: { "Ref": "AWS::AccountId" }
+    REGION: ${opt:region, 'us-east-2'}
+    ENV: ${opt:stage, 'dev'}
+  logs:
+        restApi: true
+
+functions:
+
+    
