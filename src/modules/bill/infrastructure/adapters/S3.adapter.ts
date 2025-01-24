@@ -1,31 +1,19 @@
-import S3 from "aws-sdk/clients/s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export class S3Adapter {
-  private s3Client: S3;
+  private s3Client: S3Client;
 
   constructor() {
-    this.s3Client = new S3();
+    this.s3Client = new S3Client({ region: process.env.REGION });
   }
 
-  public async getSignedUrl(
-    bucketName: string,
-    key: string,
-    isPublic: boolean
-  ): Promise<{ presignedUrl: string; s3Url: string; key: string }> {
-    
-    // Ejemplo
-    const presignedUrl = await this.s3Client.getSignedUrlPromise("putObject", {
+  public async getSignedUrl(bucketName: string, key: string) {
+    const command = new PutObjectCommand({
       Bucket: bucketName,
-      Key: key,
-      Expires: 3600,
+      Key: key
     });
-
-    const s3Url = `https://${bucketName}.s3.amazonaws.com/${key}`;
-
-    return {
-      presignedUrl,
-      s3Url,
-      key,
-    };
+    
+    return getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
   }
 }

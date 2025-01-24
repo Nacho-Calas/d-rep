@@ -1,14 +1,16 @@
-import { BillFactory } from "../../domain/factories/bill.factory";
+import { CreateBillDTO } from "../../domain/dto/create_bill.dto";
 import { UUID } from "../../domain/value_objects/uuid.vo";
 import { S3Adapter } from "../../infrastructure/adapters/S3.adapter";
 import { BillDynamoDBRepository } from "../../infrastructure/repositories/BillDynamoDBRepository";
+import { BillFactory } from "../factories/bill.factory";
 
 
+// ARMAR REPSUESTA EN DTO
 interface GetPresignedUrlResult {
   statusCode: number;
   body: {
-    url: string;
     id: string;
+    url: string;
   };
   headers?: Record<string, string>;
 }
@@ -21,7 +23,13 @@ export class GetPresignedUrlUseCase {
 
   public async execute(userId: string): Promise<GetPresignedUrlResult> {
     try {
-        
+      const billId = UUID.create()
+      const bill = BillFactory.createBill(
+        new CreateBillDTO({
+          id: billId,
+          creationDate: new Date()
+        })
+      );
         
       const fileName = `${userId}/${billId}_${Date.now()}.jpg`;
 
@@ -29,30 +37,23 @@ export class GetPresignedUrlUseCase {
       const result = await this.s3Adapter.getSignedUrl(
         process.env.BUCKET_BILLS!,
         fileName,
-        true
       );
 
-      const bill = BillFactory.createBill(
-        new UUID(),
-        userId,
-      );
+      // 2) Crear bill en DynamoDB
+      const response = await this.billRepo.createNewBill(bill);
 
-      await this.billRepo.createNewBill(bill);
-
-
-      // Podemos crear hasta un ResponseDTO para manejar la respuesta
-      // const response = new GetPresignedUrlResponse(result.presignedUrl, billId);
       return {
         statusCode: 200,
         body: {
-          url: result.presignedUrl,
-          id: billId,
+          id: billId.getUUID(),
+          url: result,
         },
         headers: {
           "Access-Control-Allow-Origin": "*",
         },
       };
     } catch (error) {
+      // Tambien podemos crear un ErrorResponse para manejar los errores
       console.error("Error in GetPresignedUrlUseCase", error);
       return {
         statusCode: 500,
