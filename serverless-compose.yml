@@ -1,0 +1,21 @@
+services:
+  shared-apigateway:
+    path: src/shared-infrastructure/apigateway
+    params:
+      AWS_REGION: ${env:AWS_REGION}
+
+  deyappa-back-sls:
+    path: .
+    dependsOn:
+      - shared-apigateway
+    params:
+      AWS_REGION: ${env:AWS_REGION}
+      HTTP_API_ID: ${shared-apigateway.HttpApiId}
+
+  bill:
+    path: ./src/modules/bill
+    dependsOn:
+      - shared-apigateway
+    params:
+      AWS_REGION: ${env:AWS_REGION}
+      HTTP_API_ID: ${shared-apigateway.HttpApiId}

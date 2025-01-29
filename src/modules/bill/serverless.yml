@@ -5,9 +5,12 @@ provider:
   name: aws
   runtime: nodejs18.x
   stage: ${opt:stage, 'dev'}
-  region: ${opt:region, 'us-east-2'}
+  region: ${param:AWS_REGION} 
+  apiGateway:
+    restApiId: ${param:SHARED_API_ID}
+    restApiRootResourceId: ${param:SHARED_API_ROOT}
 
-  iam: 
+  iam:
     role:
       statements:
         - Effect: Allow
@@ -20,15 +23,34 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
             - dynamodb:BatchWriteItem
-          # Resource:
+          Resource: "*"
+        # ...
 
-  enviroment:
+  environment:
     ACCOUNT_ID: { "Ref": "AWS::AccountId" }
-    REGION: ${opt:region, 'us-east-2'}
+    REGION: ${param:AWS_REGION}
     ENV: ${opt:stage, 'dev'}
-  logs:
-        restApi: true
 
 functions:
+  presignedUrl:
+    handler: lambdas/presignedUrl/handler
+    events:
+      - httpApi:
+          path: /bill/presigned_url
+          method: get
 
-    
+resources:
+  Resources:
+    BillsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: new-bill-${sls:stage}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

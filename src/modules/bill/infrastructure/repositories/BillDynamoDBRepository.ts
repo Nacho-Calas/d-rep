@@ -25,5 +25,4 @@ export class BillDynamoDBRepository {
     );
   }
 
-  // Resto de los metodos
 }

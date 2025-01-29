@@ -1,0 +1,29 @@
+service: deyappa-apigateway
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: ${param:AWS_REGION}
+
+  # Logs Configs
+  logRetentionInDays: 7
+
+  # IAM Roles
+  iam:
+
+# Custom Vars
+custom:
+  ApiGatewayName: 
+  ApiGatewayExportIdName: 
+
+# Resources
+resources:
+  Resources:
+    HttpApi:
+      Type: AWS::ApiGatewayV2::Api
+      Properties:
+        Name: DeyappaHttpApi
+        ProtocolType: HTTP
+  Outputs:
+    HttpApiId:
+      Value: !Ref HttpApi

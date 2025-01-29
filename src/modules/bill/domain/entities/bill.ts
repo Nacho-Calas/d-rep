@@ -2,7 +2,7 @@ import { BillStatus } from '../enums/bill_status.enum';
 import { BillType } from '../enums/bill_type.enum';
 import { BillChangeHistory } from '../value_objects/bill_change_history.vo';
 import { UUID } from '../value_objects/uuid.vo';
-
+import { S3EventData, S3ProcessData } from '../value_objects/bill_s3_data.vo';
 
 interface BillConstructor {
   id: UUID;
@@ -15,16 +15,8 @@ interface BillConstructor {
   // Valores de S3
   s3Url?: string;
   s3Key?: string;
-  s3EventData?: { // <-- Separar en otro objeto?
-    eventTime: string,
-    userIdentity: string,
-    bucketName: string,
-    objectSize: number
-  },
-  s3ProcessData?: { //<-- Separar en otro objeto?
-    url: string,
-    key: string
-  }, 
+  s3EventData?: S3EventData,
+  s3ProcessData?: S3ProcessData,
   
   // Historial de Cambios
   changeHistory?: BillChangeHistory[]; // <-- si le queremos agregar metodos, cambiar a clase.
